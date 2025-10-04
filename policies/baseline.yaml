@@ -1,0 +1,19 @@
+version: 1
+name: "baseline-guard-v1"
+
+pre_input:
+  - rule: "block-confusables"
+    if:
+      regex: ["(?i)ignore previous instructions", "\\p{Confusable}"]
+    then: { action: block, reason: "prompt-injection-pattern" }
+
+post_output:
+  - rule: "no-system-reveal"
+    if:
+      regex: ["(?i)system prompt", "(?i)internal instruction"]
+    then: { action: block, reason: "system-disclosure" }
+
+tool_call:
+  - rule: "no-shell"
+    if: { tool_name_in: ["bash", "powershell"] }
+    then: { action: escalate, reason: "restricted-tool" }

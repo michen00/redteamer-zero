@@ -1,0 +1,93 @@
+[project]
+name            = "redteamer-zero"
+description     = "RedTeamer Zero: self-play jailbreak lab with attacker, defender, and auditor agents"
+authors         = [{ name = "Michael I Chen" }]
+readme          = "README.md"
+requires-python = ">=3.10"
+license         = { text = "Apache-2.0" }
+keywords        = ["red teaming", "llm", "security", "langgraph"]
+version         = "0.1.0"
+dependencies    = [
+  "langgraph>=0.6.8,<0.7",
+  "pyyaml>=6.0.1,<7",
+  "structlog>=24.1.0,<25",
+  "typing-extensions>=4.8,<5",
+]
+
+[project.urls]
+Homepage = "https://github.com/michen00/redteamer-zero"
+
+[project.scripts]
+rtz = "rtz.scripts.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.10",
+  "pre-commit",
+  "pytest>=8",
+  "pytest-benchmark",
+  "pytest-cov",
+  "ruff>=0.5",
+  "types-PyYAML",
+]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where   = ["src"]
+include = ["rtz*"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.mypy]
+python_version            = "3.10"
+allow_redefinition        = true
+disable_error_code        = ["import-untyped"]
+disallow_subclassing_any  = false
+enable_error_code         = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+enable_incomplete_feature = ["InlineTypedDict", "PreciseTupleTypes"]
+exclude                   = '''(notebooks/|tests/|\.ipynb$)'''
+exclude_gitignore         = true
+local_partial_types       = true
+no_implicit_optional      = true
+packages                  = ["rtz"]
+plugins                   = ["pydantic.mypy"]
+pretty                    = true
+show_column_numbers       = true
+show_error_code_links     = true
+show_error_codes          = true
+strict                    = true
+strict_optional           = true
+warn_redundant_casts      = true
+warn_return_any           = true
+warn_unreachable          = true
+warn_unused_configs       = true
+warn_unused_ignores       = true
+
+[tool.pytest.ini_options]
+addopts = [
+  "-ra",
+  "--strict-config",
+  "--strict-markers",
+  "--cov=rtz",
+  "--cov-report=term-missing",
+]
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+log_cli_level = "INFO"
+# markers = []
+minversion   = "6.0"
+pythonpath   = ["src"]
+testpaths    = ["tests"]
+xfail_strict = true
+
+# Development dependencies are specified in [project.optional-dependencies]
+# This section is intentionally left blank to avoid duplication
+
+[build-system]
+requires      = ["setuptools>=68", "wheel", "setuptools-scm>=8.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/rtz/_version.py"

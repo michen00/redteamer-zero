@@ -1,0 +1,37 @@
+version: 1
+name: "content-filter-policy"
+
+pre_input:
+  - rule: "block-instructions-override"
+    if:
+      regex: ["(?i)ignore (previous|all) instructions", "(?i)disregard rules"]
+    then: { action: block, reason: "instruction-override-attempt" }
+
+  - rule: "block-jailbreak-attempts"
+    if:
+      regex: ["(?i)jailbreak", "(?i)uncensored", "(?i)no restrictions"]
+    then: { action: block, reason: "jailbreak-detected" }
+
+post_output:
+  - rule: "sanitize-harmful-content"
+    if:
+      regex: ["(?i)how to (make|build|create).*(bomb|weapon|explosive)"]
+    then:
+      action: transform
+      transform: "[REDACTED: harmful content removed]"
+      reason: "harmful-content"
+
+  - rule: "block-confidential-info"
+    if:
+      regex: ["(?i)internal (api|key|token)", "(?i)confidential"]
+    then: { action: block, reason: "confidential-info-leak" }
+
+tool_call:
+  - rule: "safe-tools-only"
+    if:
+      tool_name_in: ["read_file", "list_dir", "search"]
+    then: { action: allow }
+  - rule: "block-dangerous-tools"
+    if:
+      tool_name_in: ["delete_file", "write_file", "run_command"]
+    then: { action: block, reason: "dangerous-tool-blocked" }

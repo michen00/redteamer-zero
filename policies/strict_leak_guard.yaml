@@ -1,0 +1,56 @@
+version: 1
+name: "strict-leak-guard"
+
+pre_input:
+  - rule: "deny-shadowed-prompts"
+    if:
+      regex:
+        - "(?i)system prompt"
+        - "(?i)hidden instruction"
+        - "(?i)developer prompt"
+    then:
+      action: block
+      reason: "prompt-leak-attempt"
+  - rule: "strip-tool-coercion"
+    if:
+      regex:
+        - "(?i)call the .*tool"
+        - "(?i)execute the tool"
+    then:
+      action: transform
+      transform: "Request rejected: tool invocation not permitted."
+      reason: "tool-coercion"
+
+post_output:
+  - rule: "sanitize-system-disclosure"
+    if:
+      regex:
+        - "(?i)system prompt"
+        - "(?i)developer directives"
+    then:
+      action: transform
+      transform: "[REDACTED: system instructions protected]"
+      reason: "system-disclosure"
+
+  - rule: "block-secret-leakage"
+    if:
+      regex:
+        - "(?i)api key"
+        - "(?i)secret"
+        - "(?i)leak_keys"
+    then:
+      action: block
+      reason: "secret-disclosure"
+
+tool_call:
+  - rule: "allowlisted-tools-only"
+    if:
+      tool_name_in: ["search", "stub"]
+    then:
+      action: allow
+  - rule: "deny-others"
+    if:
+      tool_name_in: ["maintenance_shell", "diagnostics", "power_reset"]
+    then:
+      action: escalate
+      reason: "restricted-tool"
