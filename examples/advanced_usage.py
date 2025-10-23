@@ -92,13 +92,13 @@ async def main() -> None:
             {
                 "rule": "custom_attack_detection",
                 "if": {"custom": True},
-                "then": {"action": "evaluate_with", "handler": "CustomPolicyRule"}
+                "then": {"action": "evaluate_with", "handler": "CustomPolicyRule"},
             },
             {
                 "rule": "block_sensitive_terms",
                 "if": {"regex": ["secret", "password", "key", "credentials"]},
-                "then": {"action": "block", "reason": "Sensitive term detected"}
-            }
+                "then": {"action": "block", "reason": "Sensitive term detected"},
+            },
         ],
         post_output=[],
         tool_call=[],

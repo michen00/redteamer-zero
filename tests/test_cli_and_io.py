@@ -32,7 +32,9 @@ from rtz.scripts.cli import main as rtz_main
         ([r"system", r"visible"], "the system prompt is hidden", "FAIL", 1.0),
     ),
 )
-def test_rule_judge(patterns: list[str], input_text: str, expected_label: str, expected_score: float) -> None:
+def test_rule_judge(
+    patterns: list[str], input_text: str, expected_label: str, expected_score: float
+) -> None:
     """Test RuleJudge with various patterns and inputs.
 
     Args:
@@ -106,7 +108,7 @@ def test_cli_run_creates_trace_and_summary(
         "prompt",
         "output",
         "timestamp",
-        "metadata"
+        "metadata",
     }
 
     # Verify all expected keys are present
@@ -117,7 +119,7 @@ def test_cli_run_creates_trace_and_summary(
     if "timestamp" in first:
         assert re.match(
             r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$",
-            first["timestamp"]
+            first["timestamp"],
         ), "Timestamp is not in ISO 8601 format"
 
     # Verify summary file content

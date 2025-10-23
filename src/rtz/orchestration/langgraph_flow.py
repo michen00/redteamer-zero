@@ -27,7 +27,6 @@ class SupportsGenerate(Protocol):
         """Return a generated attack string for ``prompt``."""
 
 
-
 class RTZState(TypedDict):
     """Mutable state passed between LangGraph nodes."""
 

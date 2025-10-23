@@ -22,12 +22,8 @@ def test_full_pipeline(tmp_path: Path) -> None:
         "category": "test",
         "user_prompt": "Test prompt",
         "success_criteria": [
-            {
-                "type": "regex_any",
-                "patterns": ["SUCCESS"],
-                "severity": "high"
-            }
-        ]
+            {"type": "regex_any", "patterns": ["SUCCESS"], "severity": "high"}
+        ],
     }
 
     scenario_file = tmp_path / "test_scenario.yaml"
@@ -54,11 +50,11 @@ def test_full_pipeline(tmp_path: Path) -> None:
             PolicyRule(
                 rule="block_dangerous",
                 if_={"regex": ["dangerous", "explosive"]},
-                then={"action": "block", "reason": "Dangerous content"}
+                then={"action": "block", "reason": "Dangerous content"},
             )
         ],
         post_output=[],
-        tool_call=[]
+        tool_call=[],
     )
 
     # Create test model that responds with SUCCESS on second attempt
@@ -81,11 +77,7 @@ def test_full_pipeline(tmp_path: Path) -> None:
     policy_engine = PolicyEngine(policy)
     judge = RuleJudge(patterns=["SUCCESS"])
 
-    graph = build_graph(
-        model=model,
-        policy_engine=policy_engine,
-        judge=judge
-    )
+    graph = build_graph(model=model, policy_engine=policy_engine, judge=judge)
 
     # Initial state
     initial_state: RTZState = {
@@ -99,7 +91,7 @@ def test_full_pipeline(tmp_path: Path) -> None:
         "judgement": None,
         "learner_state": {},
         "costs": {},
-        "done": False
+        "done": False,
     }
 
     # Run the graph (should take 2 attempts)
