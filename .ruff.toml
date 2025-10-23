@@ -37,8 +37,6 @@ ignore = [
     "A001",    # Variable is shadowing a Python builtin
     "A002",    # Argument name is shadowing a Python builtin
     "A003",    # Class attribute is shadowing a Python builtin
-    "ANN101",  # Missing type annotation for self in method
-    "ANN102",  # Missing type annotation for cls in classmethod
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
     "ARG001",  # Unused function argument (handled by F841)
     "ARG002",  # Unused method argument (handled by F841)
@@ -48,7 +46,6 @@ ignore = [
     "ERA001",  # Commented out code
     "FIX002",  # Line contains TODO, FIXME, etc.
     "N999",    # Invalid module name
-    "PD901",   # DataFrame variable name doesn't follow naming rules
     "PLR0913", # Too many arguments to function call
     "PLR2004", # Magic value used in comparison
     "RET504",  # Unnecessary variable assignment before return statement
