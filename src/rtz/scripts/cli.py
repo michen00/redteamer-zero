@@ -215,8 +215,12 @@ def build_parser() -> argparse.ArgumentParser:
     pt.set_defaults(func=cmd_tune)
 
     prep = sub.add_parser("report")
-    prep.add_argument("--trace", nargs="+", required=True)
-    prep.add_argument("--html", required=True)
+    # Accept both --trace and --input for compatibility with tests/examples
+    prep.add_argument("--trace", nargs="+", required=False)
+    prep.add_argument("--input", nargs="+", required=False)
+    # Accept both --html and --output
+    prep.add_argument("--html", required=False)
+    prep.add_argument("--output", required=False)
     prep.set_defaults(func=cmd_report)
 
     return p
