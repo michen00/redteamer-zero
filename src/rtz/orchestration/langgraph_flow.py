@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Protocol, TypedDict
 
 from langgraph.graph import END, StateGraph
-from typing_extensions import NotRequired
 
 from rtz.defense import Policy, PolicyEngine
 from rtz.judge import RuleJudge
@@ -14,6 +13,8 @@ from rtz.utils.logging import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from typing_extensions import NotRequired
 
 
 logger = get_logger(__name__)
