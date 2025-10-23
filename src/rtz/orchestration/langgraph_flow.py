@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Protocol, TypedDict
 
+try:  # Preferred on py3.11+, fallback to typing_extensions for older Pythons
+    from typing import NotRequired
+except Exception:  # pragma: no cover - environment dependent
+    from typing_extensions import NotRequired
+
 from langgraph.graph import END, StateGraph
 
 from rtz.defense import Policy, PolicyEngine
@@ -213,10 +218,11 @@ def create_judge_node(judge: RuleJudge) -> Callable[[RTZState], RTZState]:
 
         decision = judge.evaluate(state["model_output"])
 
+        # Normalize success for both legacy labels
         judgement = {
             "label": decision.label,
             "reason": decision.reason,
-            "success": decision.label == "SUCCESS",
+            "success": decision.label in ("SUCCESS", "PASS"),
         }
 
         return {
