@@ -20,7 +20,7 @@ extend-exclude = [
 
 # Code style settings
 indent-width = 4
-line-length = 88
+line-length  = 88
 
 # Output format for linting results
 output-format = "concise"
@@ -74,39 +74,39 @@ dummy-variable-rgx = "^((kw)?args|_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # Per-file ignores
 [lint.per-file-ignores]
 "__init__.py" = [
-    "D104",  # Missing docstring in public package
-    "F401",  # Imported but unused
-    "F403",  # Undefined name from wildcard import
+    "D104", # Missing docstring in public package
+    "F401", # Imported but unused
+    "F403", # Undefined name from wildcard import
 ]
 
 "**/tests/**/*.py" = [
-    "S101",  # Use of assert in tests is fine
-    "ARG001", # Unused argument in test fixtures
-    "ARG002", # Unused argument in test methods
-    "D100",  # Missing docstring in public module
-    "D101",  # Missing docstring in public class
-    "D102",  # Missing docstring in public method
-    "D103",  # Missing docstring in public function
-    "D104",  # Missing docstring in public package
-    "D105",  # Missing docstring in magic method
-    "D107",  # Missing docstring in __init__
-    "D202",  # No blank lines allowed after function docstring
-    "D401",  # First line should be in imperative mood
-    "E501",  # Line too long
+    "S101",    # Use of assert in tests is fine
+    "ARG001",  # Unused argument in test fixtures
+    "ARG002",  # Unused argument in test methods
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
+    "D202",    # No blank lines allowed after function docstring
+    "D401",    # First line should be in imperative mood
+    "E501",    # Line too long
     "PLR2004", # Magic value used in comparison
 ]
 
 "**/scripts/*.py" = [
-    "N999",  # Invalid module name (scripts often have dashes)
-    "T201",  # Print statement in scripts is fine
+    "N999", # Invalid module name (scripts often have dashes)
+    "T201", # Print statement in scripts is fine
 ]
 
 "**/scripts/**/*.py" = [
-    "ANN401",  # Any type in scripts is fine
-    "BLE001",  # Blind except in scripts is fine
-    "E731",    # Lambda assignment in scripts is fine
-    "EXE003",  # Shebang missing in scripts is fine
-    "N815",    # Mixed case variable in class scope is fine in scripts
+    "ANN401", # Any type in scripts is fine
+    "BLE001", # Blind except in scripts is fine
+    "E731",   # Lambda assignment in scripts is fine
+    "EXE003", # Shebang missing in scripts is fine
+    "N815",   # Mixed case variable in class scope is fine in scripts
 ]
 
 "docs/conf.py" = [
@@ -130,39 +130,6 @@ dummy-variable-rgx = "^((kw)?args|_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "W505",    # doc-line-too-long
 ]
 
-# Formatting configuration
-[format]
-# Use spaces for indentation
-indent-style = "space"
-indent-width = 4
-
-# Maximum line length
-line-length = 88
-
-# Use single quotes for strings
-quote-style = "single"
-
-# Add trailing commas to container literals
-trailing-comma = true
-
-# Add a space after '#' in comments
-space-in-comment = true
-
-# Add a space after '#' in inline comments
-space-in-inline-comment = true
-
-# Add a space after ':' in dictionary literals
-space-in-dict = true
-
-# Add a space after ',' in function calls and definitions
-space-in-function-call = true
-
-# Add a space after ',' in type annotations
-space-in-type-annotation = true
-
-# Add a space around '=' in function arguments
-space-around-equals = true
-
 # Plugin configurations
 [lint.flake8-pytest-style]
 parametrize-values-type = "tuple"
@@ -173,9 +140,9 @@ parametrize-values-type = "tuple"
 quote-annotations = false
 
 [lint.isort]
-case-sensitive = true
-combine-as-imports = true
-force-to-top = ["src"]
+case-sensitive          = true
+combine-as-imports      = true
+force-to-top            = ["src"]
 split-on-trailing-comma = false
 
 [lint.mccabe]
