@@ -14,6 +14,7 @@ from rtz.utils.logging import get_logger
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from langgraph.pregel import Pregel
     from typing_extensions import NotRequired
 
 
