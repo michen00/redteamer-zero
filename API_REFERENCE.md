@@ -9,9 +9,11 @@ This document provides detailed API documentation for the RedTeamer Zero framewo
 #### `langgraph_flow` Module
 
 ##### `RTZState`
+
 A TypedDict defining the state schema for the LangGraph flow.
 
 **Attributes:**
+
 - `seed` (int): Random seed for reproducibility
 - `budget_usd` (float): Remaining budget in USD
 - `scenario` (dict): The current scenario being tested
@@ -25,9 +27,11 @@ A TypedDict defining the state schema for the LangGraph flow.
 - `done` (bool): Whether the flow should terminate
 
 ##### `build_graph(model=None, policy_engine=None, judge=None)`
+
 Build the LangGraph flow.
 
 **Parameters:**
+
 - `model`: The language model to use (defaults to StubModel)
 - `policy_engine`: The policy engine to use for defense
 - `judge`: The judge to use for evaluation
@@ -38,17 +42,21 @@ A configured LangGraph Pregel instance
 ### 2. Defense (`rtz.defense`)
 
 #### `Policy` Class
+
 Defines a defense policy with pre-input, post-output, and tool-call rules.
 
 **Methods:**
+
 - `evaluate_pre_input(text: str) -> dict`: Evaluate input against pre-input rules
 - `evaluate_post_output(text: str) -> dict`: Evaluate output against post-output rules
 - `evaluate_tool_call(tool_name: str, args: dict) -> dict`: Evaluate tool calls against tool-call rules
 
 #### `PolicyEngine` Class
+
 Manages and applies defense policies.
 
 **Methods:**
+
 - `defend_input(text: str) -> dict`: Apply pre-input defenses
 - `defend_output(text: str) -> dict`: Apply post-output defenses
 - `check_tool_call(tool_name: str, args: dict) -> dict`: Check if a tool call is allowed
@@ -56,9 +64,11 @@ Manages and applies defense policies.
 ### 3. Judge (`rtz.judge`)
 
 #### `RuleJudge` Class
+
 Evaluates model outputs against predefined success criteria.
 
 **Methods:**
+
 - `evaluate(output: str, expected: str = None) -> dict`: Evaluate model output against criteria
 - `add_pattern(pattern: str)`: Add a new pattern to match against
 - `clear_patterns()`: Clear all patterns
@@ -66,41 +76,51 @@ Evaluates model outputs against predefined success criteria.
 ### 4. Models (`rtz.models`)
 
 #### `BaseModel` Class
+
 Abstract base class for all model implementations.
 
 **Methods:**
+
 - `generate(prompt: str, **kwargs) -> str`: Generate text from a prompt
 - `get_embeddings(text: str) -> list[float]`: Get embeddings for text
 
 #### `StubModel` Class
+
 A simple model implementation for testing.
 
 **Methods:**
+
 - `generate(prompt: str, **kwargs) -> str`: Echo back the input prompt
 
 ### 5. Attack (`rtz.attack`)
 
 #### `BaseAttack` Class
+
 Abstract base class for attack strategies.
 
 **Methods:**
+
 - `generate_prompt(scenario: dict) -> str`: Generate an attack prompt
 - `evaluate_response(response: str) -> bool`: Evaluate if attack was successful
 
 ## Utilities (`rtz.utils`)
 
 ### `config` Module
+
 Configuration loading and management.
 
 ### `logging_utils` Module
+
 Logging configuration and utilities.
 
 ### `metrics` Module
+
 Performance and evaluation metrics collection.
 
 ## Scripts (`rtz.scripts`)
 
 ### `cli` Module
+
 Command-line interface for running tests and experiments.
 
 ## Examples
@@ -141,6 +161,7 @@ All modules raise appropriate exceptions with descriptive error messages. Common
 ## Logging
 
 The framework uses Python's built-in logging module with the following log levels:
+
 - DEBUG: Detailed debug information
 - INFO: General operational information
 - WARNING: Non-critical issues

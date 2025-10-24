@@ -23,12 +23,15 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally
+
    ```bash
    git clone https://github.com/yourusername/redteamer-zero.git
    cd redteamer-zero
    ```
+
 3. **Set up the development environment** (see below)
 4. **Create a new branch** for your changes
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -36,17 +39,20 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
 ## 🛠️ Development Setup
 
 1. **Set up a virtual environment**
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 2. **Install development dependencies**
+
    ```bash
    pip install -e .[dev]
    ```
 
 3. **Install pre-commit hooks**
+
    ```bash
    pre-commit install
    ```
@@ -61,14 +67,15 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
    - `test/` for test-related changes
 
 2. **Write clear commit messages**:
+
    ```
    type(scope): short description
-   
+
    More detailed description if needed.
-   
+
    Fixes #issue-number
    ```
-   
+
    Common types:
    - `feat`: New feature
    - `fix`: Bug fix
@@ -83,16 +90,19 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
 We use `pytest` for testing. Before submitting a PR, please ensure:
 
 1. All tests pass:
+
    ```bash
    pytest
    ```
 
 2. Code coverage is maintained or improved:
+
    ```bash
    pytest --cov=rtz --cov-report=term-missing
    ```
 
 3. Type checking passes:
+
    ```bash
    mypy rtz/
    ```
@@ -107,6 +117,7 @@ We use `pytest` for testing. Before submitting a PR, please ensure:
 ## 🎨 Code Style
 
 We use:
+
 - **Black** for code formatting
 - **isort** for import sorting
 - **flake8** for linting
@@ -124,11 +135,13 @@ mypy rtz/
 ## 🔄 Pull Request Process
 
 1. Ensure your fork is up to date with the main branch:
+
    ```bash
    git pull --rebase upstream main
    ```
 
 2. Push your changes to your fork:
+
    ```bash
    git push origin your-branch-name
    ```

@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Comprehensive API reference documentation
 - Detailed tutorial with examples
 - CHANGELOG.md to track project changes
 - Improved README.md with better organization and links to documentation
 
 ### Changed
+
 - Updated documentation structure for better navigation
 - Fixed markdown linting issues across documentation files
 - Enhanced code examples in documentation
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-09-26
 
 ### Added
+
 - Initial release of RedTeamer Zero
 - Core framework with Attacker-Defender-Judge-Learner loop
 - Support for testing AI model safety and robustness
