@@ -75,7 +75,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     trace_path = out_dir / "trace.jsonl"
 
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     with trace_path.open("w", encoding="utf-8") as trace:
         successful = 0
@@ -105,7 +105,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                     "reason": decision.reason,
                     "score": getattr(decision, "score", None),
                 },
-                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "metadata": scenario.get("metadata", {}),
             }
             # Update running summary counters
