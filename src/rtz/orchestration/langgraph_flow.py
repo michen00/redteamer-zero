@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Protocol, TypedDict
 
 try:  # Preferred on py3.11+, fallback to typing_extensions for older Pythons
     from typing import NotRequired
-except Exception:  # pragma: no cover - environment dependent
+except ImportError:  # pragma: no cover - environment dependent
     from typing_extensions import NotRequired  # noqa: TC002
 
 from langgraph.graph import END, StateGraph
