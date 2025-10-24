@@ -59,7 +59,6 @@ ignore = [
     "UP035",   # Unnecessary iterable allocation
     "UP040",   # Non-PEP 695 type alias
     "PLC0415", # import-outside-top-level
-    "UP047",   # non-pep695-generic-function
 ]
 
 # Allow potentially confusing unicode characters (e.g., α, β, etc.)

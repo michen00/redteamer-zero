@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+<!-- markdownlint-disable MD024 -->
+
 ### Added
 
 - Comprehensive API reference documentation
@@ -23,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-09-26
 
 ### Added
+
+<!-- markdownlint-enable MD024 -->
 
 - Initial release of RedTeamer Zero
 - Core framework with Attacker-Defender-Judge-Learner loop

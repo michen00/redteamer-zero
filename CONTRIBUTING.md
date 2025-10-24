@@ -60,6 +60,7 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
 ## ✨ Making Changes
 
 1. **Follow the branch naming convention**:
+
    - `feature/` for new features
    - `fix/` for bug fixes
    - `docs/` for documentation changes
@@ -68,7 +69,7 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
 
 2. **Write clear commit messages**:
 
-   ```
+   ```text
    type(scope): short description
 
    More detailed description if needed.
@@ -77,6 +78,7 @@ This project adheres to the [Contributor Covenant](https://www.contributor-coven
    ```
 
    Common types:
+
    - `feat`: New feature
    - `fix`: Bug fix
    - `docs`: Documentation changes
