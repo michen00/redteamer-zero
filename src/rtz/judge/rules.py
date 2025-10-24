@@ -31,8 +31,8 @@ class RuleJudge:
     def __init__(
         self,
         patterns: list[str] | None = None,
+        *,
         case_sensitive: bool = True,
-        *args: object,
         **kwargs: object,
     ) -> None:
         """Create a RuleJudge.
