@@ -109,7 +109,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 "metadata": scenario.get("metadata", {}),
             }
             # Update running summary counters
-            if decision.label == "SUCCESS" or decision.label == "PASS":
+            if decision.label in {"SUCCESS", "PASS"}:
                 successful += 1
             else:
                 failed += 1
