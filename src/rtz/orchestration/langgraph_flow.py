@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Protocol, TypedDict
 try:  # Preferred on py3.11+, fallback to typing_extensions for older Pythons
     from typing import NotRequired
 except Exception:  # pragma: no cover - environment dependent
-    from typing_extensions import NotRequired
+    from typing_extensions import NotRequired  # noqa: TC002
 
 from langgraph.graph import END, StateGraph
 
@@ -20,7 +20,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from langgraph.pregel import Pregel
-    from typing_extensions import NotRequired
 
 
 logger = get_logger(__name__)
