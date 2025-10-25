@@ -34,6 +34,6 @@ def test_deterministic_seed() -> None:
     set_seed(42)
     import random
 
-    generator = random.Random(42)  # noqa: S311 - deterministic test coverage
+    generator = random.Random(42)  # noqa: S311 - deterministic test coverage # nosec B311
     seq = [generator.randint(0, 100) for _ in range(3)]
     assert seq == [81, 14, 3]

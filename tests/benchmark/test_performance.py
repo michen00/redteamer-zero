@@ -16,11 +16,7 @@ if TYPE_CHECKING:
 
 def benchmark(func: Callable[[], None], n: int = 10) -> dict[str, float]:
     """Run ``func`` ``n`` times and return simple timing statistics."""
-    if not callable(func):
-        error_message = "benchmark() requires a callable input"
-        raise TypeError(error_message)
-
-    times = []
+    times: list[float] = []
     for _ in range(n):
         start = time.perf_counter()
         func()
@@ -52,6 +48,7 @@ def create_test_state() -> RTZState:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
 

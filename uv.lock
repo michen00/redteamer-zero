@@ -891,7 +891,7 @@ wheels = [
 
 [[package]]
 name = "redteamer-zero"
-version = "0.0.0"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "langgraph" },
@@ -901,17 +901,6 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest-benchmark" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
-    { name = "types-pyyaml" },
-]
-
-[package.dev-dependencies]
 dev = [
     { name = "mypy" },
     { name = "pre-commit" },
@@ -937,17 +926,6 @@ requires-dist = [
     { name = "typing-extensions", specifier = ">=4.8,<5" },
 ]
 provides-extras = ["dev"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = ">=1.10" },
-    { name = "pre-commit" },
-    { name = "pytest", specifier = ">=8" },
-    { name = "pytest-benchmark" },
-    { name = "pytest-cov" },
-    { name = "ruff", specifier = ">=0.5" },
-    { name = "types-pyyaml" },
-]
 
 [[package]]
 name = "requests"

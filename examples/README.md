@@ -5,15 +5,17 @@ This directory contains example scripts that demonstrate how to use the RedTeame
 ## Getting Started
 
 1. Make sure you have installed RedTeamer Zero in development mode:
+
    ```bash
    pip install -e .[dev]
    ```
 
 2. Run the examples using Python:
+
    ```bash
    # Basic usage example
    python examples/basic_usage.py
-   
+
    # Advanced usage example
    python examples/advanced_usage.py
    ```
@@ -23,6 +25,7 @@ This directory contains example scripts that demonstrate how to use the RedTeame
 ### Basic Usage (`basic_usage.py`)
 
 This example demonstrates the most basic usage of the RedTeamer Zero framework, including:
+
 - Setting up a simple policy
 - Creating a basic scenario
 - Running a red teaming experiment
@@ -31,6 +34,7 @@ This example demonstrates the most basic usage of the RedTeamer Zero framework, 
 ### Advanced Usage (`advanced_usage.py`)
 
 This example shows more advanced usage, including:
+
 - Creating custom attack strategies
 - Implementing custom policy rules
 - Working with more complex scenarios

@@ -1,4 +1,4 @@
-"""RedTeamer Zero: A self-play jailbreak lab with attacker, defender, and auditor agents.
+"""RedTeamer Zero: A self-play jailbreak lab with attacker, defender, and auditor roles.
 
 This module provides a framework for red teaming language models through self-play.
 It includes components for attacking models, defending against attacks, and evaluating

@@ -4,8 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Protocol, TypedDict
 
+try:  # Preferred on py3.11+, fallback to typing_extensions for older Pythons
+    from typing import NotRequired  # type: ignore[attr-defined]
+except ImportError:  # pragma: no cover - environment dependent
+    from typing_extensions import NotRequired  # noqa: TC002
+
 from langgraph.graph import END, StateGraph
-from typing_extensions import NotRequired
 
 from rtz.defense import Policy, PolicyEngine
 from rtz.judge import RuleJudge
@@ -14,6 +18,8 @@ from rtz.utils.logging import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from langgraph.pregel import Pregel
 
 
 logger = get_logger(__name__)
@@ -24,7 +30,6 @@ class SupportsGenerate(Protocol):
 
     def generate(self, prompt: str, **kwargs: object) -> str:
         """Return a generated attack string for ``prompt``."""
-
 
 
 class RTZState(TypedDict):
@@ -207,15 +212,17 @@ def create_judge_node(judge: RuleJudge) -> Callable[[RTZState], RTZState]:
         if state.get("error"):
             return state
 
-        if not state.get("model_output"):
+        model_output = state.get("model_output")
+        if model_output is None:
             return {**state, "done": True, "error": "No model output to judge"}
 
-        decision = judge.evaluate(state["model_output"])
+        decision = judge.evaluate(model_output)
 
+        # Normalize success for both legacy labels
         judgement = {
             "label": decision.label,
             "reason": decision.reason,
-            "success": decision.label == "SUCCESS",
+            "success": decision.label in ("SUCCESS", "PASS"),
         }
 
         return {
@@ -317,7 +324,10 @@ def build_graph(
         Compiled LangGraph ``Pregel`` workflow ready for execution.
     """
     if model is None:
-        model = StubModel()
+        model_instance: SupportsGenerate = StubModel()
+    else:
+        model_instance = model
+
     if policy_engine is None:
         policy_engine = PolicyEngine(
             Policy(
@@ -333,7 +343,7 @@ def build_graph(
 
     workflow = StateGraph(RTZState)
 
-    workflow.add_node("attacker", create_attacker_node(model))
+    workflow.add_node("attacker", create_attacker_node(model_instance))
     workflow.add_node("defender", create_defender_node(policy_engine))
     workflow.add_node("judge", create_judge_node(judge))
     workflow.add_node("learner", create_learner_node())
@@ -342,7 +352,7 @@ def build_graph(
     workflow.add_edge("defender", "judge")
     workflow.add_edge("judge", "learner")
 
-    def should_continue(state: RTZState) -> str:
+    def should_continue(state: RTZState) -> object:
         """Continue looping until ``done`` is set by the learner node."""
         if state.get("done", False):
             return END

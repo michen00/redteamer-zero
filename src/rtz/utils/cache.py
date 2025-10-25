@@ -55,7 +55,8 @@ class FileCache:
         p = self.root / f"{key}.json"
         if not p.exists():
             return None
-        return json.loads(p.read_text(encoding="utf-8"))
+        cached: object = json.loads(p.read_text(encoding="utf-8"))
+        return cached
 
     def set(self, provider: str, model: str, prompt: str, value: object) -> None:
         """Store a value in the cache.

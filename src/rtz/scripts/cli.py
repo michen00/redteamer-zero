@@ -75,7 +75,12 @@ def cmd_run(args: argparse.Namespace) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     trace_path = out_dir / "trace.jsonl"
 
+    from datetime import datetime, timezone
+
     with trace_path.open("w", encoding="utf-8") as trace:
+        successful = 0
+        failed = 0
+        total_cost = 0.0
         for attempt_index, scenario in enumerate(scenarios):
             user_prompt = scenario.get("user_prompt", "")
             model_output = model.generate(user_prompt)
@@ -87,6 +92,7 @@ def cmd_run(args: argparse.Namespace) -> int:
             judge = RuleJudge(patterns=patterns or [r"system prompt"])
             decision = judge.evaluate(model_output)
 
+            # Minimal metadata and ISO8601 timestamp
             event = {
                 "attempt": attempt_index,
                 "scenario_id": scenario.get("id"),
@@ -97,13 +103,27 @@ def cmd_run(args: argparse.Namespace) -> int:
                 "decision": {
                     "label": decision.label,
                     "reason": decision.reason,
+                    "score": getattr(decision, "score", None),
                 },
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "metadata": scenario.get("metadata", {}),
             }
+            # Update running summary counters
+            if decision.label in {"SUCCESS", "PASS"}:
+                successful += 1
+            else:
+                failed += 1
+            # stub model cost approximation
+            total_cost += 0.01
+
             trace.write(json.dumps(event) + "\n")
 
-    # Write minimal summary
+    # Write minimal summary matching tests
     summary = {
-        "scenarios": len(scenarios),
+        "total_scenarios": len(scenarios),
+        "successful_runs": successful,
+        "failed_runs": failed,
+        "total_cost": total_cost,
         "trace": str(trace_path),
     }
     summary_path = out_dir / "summary.json"
@@ -138,7 +158,9 @@ def cmd_report(args: argparse.Namespace) -> int:
         Exit status code.
     """
     # Concatenate multiple traces and emit a placeholder HTML report
-    traces = _expand_patterns(args.trace)
+    # Accept either --trace or --input for compatibility with tests/examples
+    sources = getattr(args, "trace", None) or getattr(args, "input", None) or []
+    traces = _expand_patterns(sources)
 
     records = []
     for trace_path in traces:
@@ -162,7 +184,12 @@ def cmd_report(args: argparse.Namespace) -> int:
         "</html>\n"
     )
 
-    out_path = Path(args.html)
+    output_value = getattr(args, "html", None) or getattr(args, "output", None)
+    if output_value is None:
+        message = "report command requires --html or --output destination"
+        raise ValueError(message)
+
+    out_path = Path(str(output_value))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
     LOGGER.info("Wrote report to %s", out_path)
@@ -193,8 +220,12 @@ def build_parser() -> argparse.ArgumentParser:
     pt.set_defaults(func=cmd_tune)
 
     prep = sub.add_parser("report")
-    prep.add_argument("--trace", nargs="+", required=True)
-    prep.add_argument("--html", required=True)
+    # Accept both --trace and --input for compatibility with tests/examples
+    prep.add_argument("--trace", nargs="+", required=False)
+    prep.add_argument("--input", nargs="+", required=False)
+    # Accept both --html and --output
+    prep.add_argument("--html", required=False)
+    prep.add_argument("--output", required=False)
     prep.set_defaults(func=cmd_report)
 
     return p

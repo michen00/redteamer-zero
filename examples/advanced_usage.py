@@ -5,9 +5,8 @@ from __future__ import annotations
 import asyncio
 import re
 from random import SystemRandom
-from typing import TYPE_CHECKING, Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar, cast
 
-from rtz.attack import BaseAttack
 from rtz.defense import Policy, PolicyEngine, PolicyRule
 from rtz.judge import RuleJudge
 from rtz.orchestration.langgraph_flow import RTZState, build_graph
@@ -21,7 +20,7 @@ RNG = SystemRandom()
 
 
 # Example custom attack strategy
-class CustomAttack(BaseAttack):
+class CustomAttack:
     """Custom attack strategy that tries to bypass safety measures."""
 
     DEFAULT_ATTACK_PHRASES: ClassVar[tuple[str, ...]] = (
@@ -47,7 +46,7 @@ class CustomAttack(BaseAttack):
 
 
 # Example custom policy rule
-class CustomPolicyRule(PolicyRule):
+class CustomPolicyRule:
     """Custom policy rule for detecting and handling specific attack patterns."""
 
     PATTERNS: ClassVar[tuple[tuple[str, str], ...]] = (
@@ -89,16 +88,16 @@ async def main() -> None:
         version=1,
         name="advanced_policy",
         pre_input=[
-            {
-                "rule": "custom_attack_detection",
-                "if": {"custom": True},
-                "then": {"action": "evaluate_with", "handler": "CustomPolicyRule"}
-            },
-            {
-                "rule": "block_sensitive_terms",
-                "if": {"regex": ["secret", "password", "key", "credentials"]},
-                "then": {"action": "block", "reason": "Sensitive term detected"}
-            }
+            PolicyRule(
+                rule="custom_attack_detection",
+                if_={"custom": True},
+                then={"action": "evaluate_with", "handler": "CustomPolicyRule"},
+            ),
+            PolicyRule(
+                rule="block_sensitive_terms",
+                if_={"regex": ["secret", "password", "key", "credentials"]},
+                then={"action": "block", "reason": "Sensitive term detected"},
+            ),
         ],
         post_output=[],
         tool_call=[],
@@ -106,7 +105,9 @@ async def main() -> None:
 
     # Register custom rule
     policy_engine = PolicyEngine(policy)
-    policy_engine.register_rule("CustomPolicyRule", CustomPolicyRule())
+    register_rule = getattr(policy_engine, "register_rule", None)
+    if callable(register_rule):
+        register_rule("CustomPolicyRule", CustomPolicyRule())
 
     # Create a judge with custom patterns
     judge = RuleJudge(
@@ -143,11 +144,12 @@ async def main() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     # Run the workflow
     LOGGER.info("starting advanced red teaming experiment")
-    result = await workflow.ainvoke(initial_state)
+    result = cast("RTZState", await workflow.ainvoke(initial_state))
 
     # Print detailed results
     LOGGER.info(

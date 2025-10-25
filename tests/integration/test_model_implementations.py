@@ -13,7 +13,7 @@ from rtz.orchestration.langgraph_flow import RTZState, build_graph
 class GeneratesText(Protocol):
     """Protocol describing minimal text-generation behavior."""
 
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, **kwargs: object) -> str:
         """Generate text given ``prompt``."""
         ...
 
@@ -26,7 +26,7 @@ class MockModel:
         self.responses = responses
         self.call_count = 0
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Return the next response in the sequence."""
         if self.call_count >= len(self.responses):
             return "No more responses"
@@ -38,7 +38,7 @@ class MockModel:
 class FailingModel:
     """A model that raises an exception on generation."""
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Always raise an error when asked to generate text."""
         message = "Model generation failed"
         raise RuntimeError(message)
@@ -52,9 +52,10 @@ class SlowModel:
         self.response = response
         self.delay = delay
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Sleep for ``delay`` and return the stored ``response``."""
         import time
+
         time.sleep(self.delay)
         return self.response
 
@@ -77,7 +78,7 @@ def run_flow_with_model(model: GeneratesText, max_steps: int = 5) -> RTZState:
         "scenario": {
             "id": "test",
             "user_prompt": "Test",
-            "success_criteria": [{"type": "regex_any", "patterns": ["SUCCESS"]}]
+            "success_criteria": [{"type": "regex_any", "patterns": ["SUCCESS"]}],
         },
         "attempt": 0,
         "attack_prompt": None,
@@ -86,7 +87,8 @@ def run_flow_with_model(model: GeneratesText, max_steps: int = 5) -> RTZState:
         "judgement": None,
         "learner_state": learner_state,
         "costs": {},
-        "done": False
+        "done": False,
+        "error": None,
     }
 
     for _ in range(max_steps):
@@ -133,6 +135,7 @@ def test_slow_model() -> None:
 
     # Time the execution
     import time
+
     start = time.perf_counter()
     state = run_flow_with_model(model, max_steps=3)
     duration = time.perf_counter() - start
@@ -156,17 +159,15 @@ def test_model_with_policy() -> None:
             PolicyRule(
                 rule="block_dangerous",
                 if_={"regex": ["bomb|explosive|weapon"]},
-                then={"action": "block", "reason": "Dangerous content"}
+                then={"action": "block", "reason": "Dangerous content"},
             )
         ],
-        tool_call=[]
+        tool_call=[],
     )
 
     # Build graph with policy
     graph = build_graph(
-        model=model,
-        policy_engine=PolicyEngine(policy),
-        judge=RuleJudge(["SUCCESS"])
+        model=model, policy_engine=PolicyEngine(policy), judge=RuleJudge(["SUCCESS"])
     )
 
     # Initial state
@@ -176,7 +177,7 @@ def test_model_with_policy() -> None:
         "scenario": {
             "id": "test",
             "user_prompt": "Test",
-            "success_criteria": [{"type": "regex_any", "patterns": ["SUCCESS"]}]
+            "success_criteria": [{"type": "regex_any", "patterns": ["SUCCESS"]}],
         },
         "attempt": 0,
         "attack_prompt": None,
@@ -185,7 +186,8 @@ def test_model_with_policy() -> None:
         "judgement": None,
         "learner_state": {},
         "costs": {},
-        "done": False
+        "done": False,
+        "error": None,
     }
 
     # Run the graph
@@ -195,6 +197,5 @@ def test_model_with_policy() -> None:
     assert state["done"] is True
     assert "Dangerous content" in state.get("model_output", "")
     assert any(
-        action.get("action") == "block"
-        for action in state.get("defense_actions", [])
+        action.get("action") == "block" for action in state.get("defense_actions", [])
     )

@@ -17,23 +17,15 @@ def test_scenario() -> dict[str, Any]:
         "category": "test",
         "user_prompt": "Test prompt",
         "success_criteria": [
-            {
-                "type": "regex_any",
-                "patterns": ["SUCCESS"],
-                "severity": "high"
-            }
-        ]
+            {"type": "regex_any", "patterns": ["SUCCESS"], "severity": "high"}
+        ],
     }
 
 
 def test_allow_all_policy(test_scenario: dict[str, Any]) -> None:
     """Test with a permissive policy that allows everything."""
     policy = Policy(
-        version=1,
-        name="allow_all",
-        pre_input=[],
-        post_output=[],
-        tool_call=[]
+        version=1, name="allow_all", pre_input=[], post_output=[], tool_call=[]
     )
     policy_engine = PolicyEngine(policy)
 
@@ -55,11 +47,11 @@ def test_block_all_policy(test_scenario: dict[str, Any]) -> None:
             PolicyRule(
                 rule="block_all",
                 if_={"regex": [".*"]},
-                then={"action": "block", "reason": "Blocked by policy"}
+                then={"action": "block", "reason": "Blocked by policy"},
             )
         ],
         post_output=[],
-        tool_call=[]
+        tool_call=[],
     )
     policy_engine = PolicyEngine(policy)
 
@@ -78,11 +70,11 @@ def test_transform_policy(test_scenario: dict[str, Any]) -> None:
             PolicyRule(
                 rule="redact_emails",
                 if_={"regex": [r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"]},
-                then={"action": "transform", "transform": "[EMAIL_REDACTED]"}
+                then={"action": "transform", "transform": "[EMAIL_REDACTED]"},
             )
         ],
         post_output=[],
-        tool_call=[]
+        tool_call=[],
     )
     policy_engine = PolicyEngine(policy)
 
@@ -105,9 +97,9 @@ def test_tool_call_policy() -> None:
             PolicyRule(
                 rule="block_dangerous_tools",
                 if_={"tool_name_in": ["execute_code", "delete_file"]},
-                then={"action": "block", "reason": "Dangerous tool call"}
+                then={"action": "block", "reason": "Dangerous tool call"},
             )
-        ]
+        ],
     )
     policy_engine = PolicyEngine(policy)
 
@@ -131,21 +123,21 @@ def test_complex_policy_combination(test_scenario: dict[str, Any]) -> None:
             PolicyRule(
                 rule="block_dangerous",
                 if_={"regex": [r"bomb|explosive|weapon"]},
-                then={"action": "block", "reason": "Dangerous content detected"}
+                then={"action": "block", "reason": "Dangerous content detected"},
             ),
             # Redact PII
             PolicyRule(
                 rule="redact_pii",
                 if_={"regex": [r"\b\d{3}-\d{2}-\d{4}\b"]},  # SSN pattern
-                then={"action": "transform", "transform": "[SSN_REDACTED]"}
-            )
+                then={"action": "transform", "transform": "[SSN_REDACTED]"},
+            ),
         ],
         post_output=[
             # Block any output containing API keys
             PolicyRule(
                 rule="block_api_keys",
                 if_={"regex": [r"\b[A-Za-z0-9]{32,}\b"]},  # Simple API key pattern
-                then={"action": "block", "reason": "Potential API key detected"}
+                then={"action": "block", "reason": "Potential API key detected"},
             )
         ],
         tool_call=[
@@ -153,9 +145,9 @@ def test_complex_policy_combination(test_scenario: dict[str, Any]) -> None:
             PolicyRule(
                 rule="restrict_tools",
                 if_={"tool_name_in": ["execute_code", "delete_file"]},
-                then={"action": "block", "reason": "Restricted tool"}
+                then={"action": "block", "reason": "Restricted tool"},
             )
-        ]
+        ],
     )
     policy_engine = PolicyEngine(policy)
 
