@@ -113,6 +113,7 @@ def test_attacker_node() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = attacker(state)
@@ -142,6 +143,7 @@ def test_defender_node() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = defender(state)
@@ -167,6 +169,7 @@ def test_judge_node() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = judge(state)
@@ -190,6 +193,7 @@ def test_learner_node() -> None:
         "learner_state": {"previous_attempts": 0},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = learner(state)
@@ -219,6 +223,7 @@ def test_basic_flow(test_scenario: dict[str, Any], default_policy: Policy) -> No
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     final_state: RTZState | None = None
@@ -262,6 +267,7 @@ def test_blocking_policy(
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = cast("RTZState", graph.invoke(initial_state))
@@ -297,6 +303,7 @@ def test_budget_consumption(
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     mid_state = cast("RTZState", graph.invoke(state))
@@ -328,6 +335,7 @@ def test_judge_success(test_scenario: dict[str, Any], default_policy: Policy) ->
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     judge_node = graph.nodes["judge"]
@@ -376,6 +384,7 @@ def test_error_handling() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = cast("RTZState", graph.invoke(state))
@@ -400,6 +409,7 @@ def test_learner_termination() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     result = learner(success_state)

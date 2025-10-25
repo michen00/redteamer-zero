@@ -65,7 +65,7 @@ def test_full_pipeline(tmp_path: Path) -> None:
             """Initialize call counter."""
             self.call_count = 0
 
-        def generate(self, _prompt: str) -> str:
+        def generate(self, _prompt: str, **_: object) -> str:
             """Return non-success first, then ``SUCCESS`` on subsequent calls."""
             self.call_count += 1
             if self.call_count == 1:
@@ -92,6 +92,7 @@ def test_full_pipeline(tmp_path: Path) -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     # Run the graph (should take 2 attempts)

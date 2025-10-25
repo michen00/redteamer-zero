@@ -13,7 +13,7 @@ from rtz.orchestration.langgraph_flow import RTZState, build_graph
 class GeneratesText(Protocol):
     """Protocol describing minimal text-generation behavior."""
 
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, **kwargs: object) -> str:
         """Generate text given ``prompt``."""
         ...
 
@@ -26,7 +26,7 @@ class MockModel:
         self.responses = responses
         self.call_count = 0
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Return the next response in the sequence."""
         if self.call_count >= len(self.responses):
             return "No more responses"
@@ -38,7 +38,7 @@ class MockModel:
 class FailingModel:
     """A model that raises an exception on generation."""
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Always raise an error when asked to generate text."""
         message = "Model generation failed"
         raise RuntimeError(message)
@@ -52,7 +52,7 @@ class SlowModel:
         self.response = response
         self.delay = delay
 
-    def generate(self, _prompt: str) -> str:
+    def generate(self, _prompt: str, **_: object) -> str:
         """Sleep for ``delay`` and return the stored ``response``."""
         import time
 
@@ -88,6 +88,7 @@ def run_flow_with_model(model: GeneratesText, max_steps: int = 5) -> RTZState:
         "learner_state": learner_state,
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     for _ in range(max_steps):
@@ -186,6 +187,7 @@ def test_model_with_policy() -> None:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
     # Run the graph

@@ -184,7 +184,12 @@ def cmd_report(args: argparse.Namespace) -> int:
         "</html>\n"
     )
 
-    out_path = Path(getattr(args, "html", None) or getattr(args, "output", None))
+    output_value = getattr(args, "html", None) or getattr(args, "output", None)
+    if output_value is None:
+        message = "report command requires --html or --output destination"
+        raise ValueError(message)
+
+    out_path = Path(str(output_value))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
     LOGGER.info("Wrote report to %s", out_path)

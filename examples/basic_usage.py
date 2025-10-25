@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import asyncio
+from typing import cast
 
-from rtz.defense import Policy, PolicyEngine
+from rtz.defense import Policy, PolicyEngine, PolicyRule
 from rtz.judge import RuleJudge
 from rtz.models.stub import StubModel
 from rtz.orchestration.langgraph_flow import RTZState, build_graph
@@ -19,14 +20,14 @@ async def run_experiment() -> RTZState:
         version=1,
         name="basic_policy",
         pre_input=[
-            {
-                "rule": "block_keywords",
-                "if": {"regex": ["secret", "password", "key"]},
-                "then": {
+            PolicyRule(
+                rule="block_keywords",
+                if_={"regex": ["secret", "password", "key"]},
+                then={
                     "action": "block",
                     "reason": "Sensitive term detected",
                 },
-            }
+            )
         ],
         post_output=[],
         tool_call=[],
@@ -55,9 +56,10 @@ async def run_experiment() -> RTZState:
         "learner_state": {},
         "costs": {},
         "done": False,
+        "error": None,
     }
 
-    return await workflow.ainvoke(initial_state)
+    return cast("RTZState", await workflow.ainvoke(initial_state))
 
 
 async def main() -> None:

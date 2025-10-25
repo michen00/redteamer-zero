@@ -9,12 +9,12 @@ import random
 try:  # pragma: no cover - numpy optional
     import numpy as np
 except ImportError:  # pragma: no cover - numpy optional
-    np = None  # type: ignore[assignment]
+    np = None
 
 try:  # pragma: no cover - torch optional
     import torch
 except ImportError:  # pragma: no cover - torch optional
-    torch = None  # type: ignore[assignment]
+    torch = None
 
 
 def set_seed(seed: int, *, deterministic: bool = True) -> None:
@@ -32,8 +32,10 @@ def set_seed(seed: int, *, deterministic: bool = True) -> None:
 
     if torch is not None:
         torch.manual_seed(seed)
-        if hasattr(torch.cuda, "manual_seed_all"):
+        if hasattr(torch, "cuda") and hasattr(torch.cuda, "manual_seed_all"):
             torch.cuda.manual_seed_all(seed)
-        if deterministic and hasattr(torch, "use_deterministic_algorithms"):
-            torch.use_deterministic_algorithms(mode=True)  # type: ignore[attr-defined]
-            os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+        if deterministic:
+            use_deterministic = getattr(torch, "use_deterministic_algorithms", None)
+            if callable(use_deterministic):
+                use_deterministic(mode=True)
+                os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
