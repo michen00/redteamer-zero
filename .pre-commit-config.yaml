@@ -14,7 +14,7 @@ ci:
 repos:
   # security
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.28.0
+    rev: v8.29.0
     hooks:
       - id: gitleaks
         fail_fast: true
@@ -30,14 +30,14 @@ repos:
     hooks:
       - id: requirements-txt-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.14.2
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.4
     hooks:
       - id: ruff
         args: ["--fix"]
       - id: ruff-format
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.2
+    rev: v0.14.4
     hooks:
       - id: ruff-check
         types_or: [python, pyi, jupyter, toml]
